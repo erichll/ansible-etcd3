@@ -1,0 +1,25 @@
+---
+
+- name: create system etcd group
+  group:
+    name: etcd
+    state: present
+
+- name: create system etcd user
+  user:
+    name: etcd
+    comment: "etcd user"
+    shell: /sbin/nologin
+    state: present
+    system: yes
+    home: "{{ etcd_data_dir }}"
+    groups: etcd
+
+- name: ensure etcd_data_dir exists
+  file:
+    path: "{{ etcd_data_dir }}"
+    recurse: yes
+    state: directory
+    owner: etcd
+    group: etcd
+

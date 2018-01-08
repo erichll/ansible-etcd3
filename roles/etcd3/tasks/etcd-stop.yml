@@ -1,0 +1,7 @@
+---
+
+- name: stop etcd
+  systemd:
+    name: etcd
+    state: stopped
+    enabled: no

@@ -1,0 +1,61 @@
+---
+
+
+- name: check whether etcd release tar downloaded on the first etcd server 
+  stat: 
+    path: "{{ ansible_temp_dir }}/{{ etcd_release}}.tar.gz"
+  register: etcd_release_download_check
+  delegate_to: "{{ groups['etcd-nodes'][0] }}"
+  run_once: true    
+
+- name: download etcd release tar file on first the etcd server 
+  get_url:
+    url: "{{ etcd_download_url }}"
+    dest: "{{ ansible_temp_dir }}"
+    validate_certs: no
+    timeout: 20
+  register: download_etcd
+  delegate_to: "{{ groups['etcd-nodes'][0] }}"
+  run_once: true
+  when: not etcd_release_download_check.stat.exists
+  
+  
+- name: check whether etcd release tar extracted on the first etcd server 
+  stat: 
+    path: "{{ ansible_temp_dir }}/{{ etcd_release }}"
+  register: etcd_release_tar_check
+  delegate_to: "{{ groups['etcd-nodes'][0] }}"
+  run_once: true  
+
+- name: extract etcd tar file
+  unarchive:
+    src: "{{ ansible_temp_dir }}/{{ etcd_release}}.tar.gz"
+    dest: "{{ ansible_temp_dir }}"
+    remote_src: yes
+  run_once: true
+  delegate_to: "{{ groups['etcd-nodes'][0] }}"
+  when: not etcd_release_tar_check.stat.exists
+  
+- name: fetch etcd bins from the first etcd server
+  fetch:
+    src: "{{ ansible_temp_dir }}/{{ etcd_release }}/{{ item }}"
+    dest: "tmp/etcd3/{{ item }}"
+    flat: yes
+  run_once: true
+  delegate_to: "{{ groups['etcd-nodes'][0] }}"
+  with_items:
+    - etcd
+    - etcdctl
+
+  
+- name: copy etcd binary
+  copy:
+    src: "tmp/etcd3/{{ item }}"
+    dest: "{{ etcd_bin_path }}"
+    owner: etcd
+    group: etcd
+    mode: 0750
+  with_items:
+    - etcd
+    - etcdctl
+    

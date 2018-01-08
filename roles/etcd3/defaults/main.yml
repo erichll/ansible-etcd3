@@ -1,0 +1,38 @@
+---
+
+etcd_version: 3.2.13
+
+etcd_download_url_base: "https://github.com/coreos/etcd/releases/download/v{{ etcd_version }}"
+etcd_release: "etcd-v{{ etcd_version }}-linux-amd64" 
+etcd_download_url: "{{ etcd_download_url_base }}/{{ etcd_release}}.tar.gz"
+
+etcd_bin_path: /usr/local/bin
+etcd_data_dir: /var/lib/etcd
+
+etcd_conf_dir: /etc/etcd
+etcd_certs_dir: "{{ etcd_conf_dir }}/ssl"
+etcd_cert_group: root
+etcd_ca_file: "{{ etcd_certs_dir }}/ca.crt"
+etcd_cert_file: "{{ etcd_certs_dir }}/server.crt"
+etcd_key_file: "{{ etcd_certs_dir }}/server.key"
+etcd_peer_ca_file: "{{ etcd_certs_dir }}/ca.crt"
+etcd_peer_cert_file: "{{ etcd_certs_dir }}/peer.crt"
+etcd_peer_key_file: "{{ etcd_certs_dir }}/peer.key"
+etcd_client_cert_file: "{{ etcd_certs_dir }}/client.crt"
+etcd_client_key_file: "{{ etcd_certs_dir }}/client.key"
+
+etcd_client_cert_auth: "true"
+etcd_peer_client_cert_auth: "true"
+
+etcd_client_port: 2379
+etcd_peer_port: 2380
+
+
+etcd_initial_cluster_state: new
+etcd_initial_cluster_token: etcd-k8s-cluster
+
+
+etcd_initial_advertise_peer_urls: "https://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
+etcd_listen_peer_urls: "https://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
+etcd_advertise_client_urls: "https://{{ etcd_machine_address }}:{{ etcd_client_port }}"
+etcd_listen_client_urls: "https://{{ etcd_machine_address }}:2379,https://127.0.0.1:2379"

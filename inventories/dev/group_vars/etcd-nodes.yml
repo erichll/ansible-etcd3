@@ -1,0 +1,6 @@
+---
+
+etcd_data_dir: /var/lib/etcd
+
+# host_ip_address: "{{ ansible_default_ipv4.address }}"
+etcd_machine_address: "{{ host_ip_address }}"

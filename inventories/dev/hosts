@@ -1,0 +1,6 @@
+vm1 ansible_connection=local
+
+[etcd-nodes]
+vm1
+vm2
+vm3

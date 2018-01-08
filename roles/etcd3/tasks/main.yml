@@ -1,0 +1,19 @@
+---
+
+- name: create etcd user and data dir
+  import_tasks: create_etcd_user.yml
+  
+- name: download and install etcd bin
+  import_tasks: install-etcd-bin.yml
+  
+- name: generate etcd certs
+  import_tasks: gen-etcd-certs.yml
+  
+- name: generate etcd systemd and config
+  import_tasks: gen-etcd-systemd.yml
+  
+- name: start etcd
+  import_tasks: etcd-start.yml
+  
+- name: restart etcd
+  import_tasks: etcd-restart.yml
